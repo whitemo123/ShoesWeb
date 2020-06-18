@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #moo{
+            position: absolute;
+            left: -50%;
+            bottom: -50%;
+            z-index: -1;
+        }
+        #box{
+            width: 670px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 5px;
+            padding: 30px 40px;
+            box-sizing: border-box;
+        }
+        #box>.content{
+            width: 100%;
+        }
+        #box>.content>.imgBox{
+            width: 100%;
+            height: 377px;
+        }
+        #box>.content>.imgBox>img{
+            width: 100%;
+            display: block;
+            height: 377px;
+        }
+        #box>.content>.select_bt{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        #box>.content>.select_bt>span{
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0 10px;
+            padding: 5px;
+            position: relative;
+            box-sizing: border-box;
+        }
+        #box>.content>.select_bt>span>a{
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #box>.content>.select_bt>.active{
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0 10px;
+            padding: 5px;
+            border: 2px solid #2980b9;
+            box-sizing: border-box;
+            position: relative;
+        }
+        #box>.content>.select_bt>.active>a{
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #box>.content>.footer{
+            width: 100%;
+            height: 50px;
+            margin-top: 40px;
+        }
+        #box>.content>.footer>font{
+            float: left;
+            font-size: 40px;
+            display: block;
+        }
+        #box>.content>.footer>span{
+            float: right;
+            padding: 5px 40px;
+            border-radius: 40px;
+            display: block;
+            font-size: 25px;
+            height: 40px;
+            line-height: 40px;
+            display: inline-block;
+            transition: .8s;
+            cursor: pointer;
+        }
+        #box>.content>.footer>span:hover{
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景层 -->
+    <div id="moo"></div>
+    <!-- 主要布局 -->
+    <div id="box">
+        <div class="content">
+            <h1>ORIGINAL SHOES</h1>
+            <h3>I am Mobai, a weber.</h3>
+            <div class="imgBox">
+                <img src="https://du.hupucdn.com/FtzELiX8VOfqxRJK7c60MPlovLrD?imageView2/0/format/webp" alt="">
+            </div>
+            <!-- 小圆点区 -->
+            <div class="select_bt">
+                <span><a href="javascript:;"></a></span>
+                <span><a href="javascript:;"></a></span>
+                <span><a href="javascript:;"></a></span>
+                <span><a href="javascript:;"></a></span>
+            </div>
+            <!-- 底部区 -->
+            <div class="footer">
+                <font id="price">￥200</font>
+                <span id="add">ADD TO CART</span>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // 取元素
+    var moo = document.getElementById("moo");
+    var bts = document.getElementsByClassName("select_bt")[0].getElementsByTagName("span");
+    var price = document.getElementById("price");
+    var add = document.getElementById("add");
+
+    // 封装成对象
+    var Theme = {
+        colors: ["#1abc9c", "#3498db", "#8e44ad", "#e74c3c"],
+        selected: 0,
+
+        // 加载四个颜色
+        initColors: function() {
+            for(var i = 0; i < bts.length; i++) {
+                bts[i].getElementsByTagName("a")[0].style.backgroundColor = this.colors[i];
+            }
+        },
+
+        // 加载圆点选中效果
+        initActive: function(){
+            for(var i = 0; i < bts.length; i++) {
+                if(bts[i].className == 'active') {
+                    bts[i].className = '';
+                }
+            }
+            bts[this.selected].className = "active";
+        },
+
+        // 设置价格和按钮
+        initFontAndBt: function() {
+            price.style.color = this.colors[this.selected];
+            add.style.border = `2px solid ${this.colors[this.selected]}`;
+            add.style.color = this.colors[this.selected];
+        },
+
+        // 背景变化动画
+        boom: function() {
+            var timer;
+            timer = setInterval(function() {
+                var wid = parseInt(moo.style.width);
+                var hei = parseInt(moo.style.height);
+                var sum = document.body.clientWidth * 2;
+                if(wid >= sum) {
+                    clearInterval(timer);
+                    moo.style.width = "100%";
+                    moo.style.height = "100%";
+                    moo.style.borderRadius = "";
+                }
+                moo.style.width = wid + 100 + "px";
+                moo.style.height = hei + 100 + "px";
+            }, 24);
+        },
+
+        // 设置背景相关属性
+        initMoo: function() {
+            moo.style.width = "0px";
+            moo.style.height = "0px";
+            moo.style.borderRadius = "50%";
+            moo.style.backgroundColor = this.colors[this.selected];
+            this.boom();
+        },
+
+        // 圆点点击事件
+        BtOnclick: function() {
+            var that = this;
+            for(let i = 0; i < bts.length; i++) {
+                bts[i].onclick = function() {
+                    that.selected = i;
+                    that.init();
+                }
+            }
+        },
+
+        // 加载
+        init: function() {
+            this.initActive();
+            this.initMoo();
+            this.initFontAndBt();
+        }
+    };
+
+    Theme.initColors();
+    Theme.init();
+    Theme.BtOnclick();
+</script>
+</html>
